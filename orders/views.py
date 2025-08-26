@@ -167,7 +167,7 @@ def esewa_return(request, order_id):
         amount_paid = _order_amount(order)
         payment, _ = Payment.objects.get_or_create(
             user=order.user,
-            paymnet_id=txn_code or f"esewa-{order.id}",
+            payment_id=txn_code or f"esewa-{order.id}",
             defaults = {
                 "payment_method":"eSewa",
                 "amount_paid": str(amount_paid),
@@ -182,7 +182,7 @@ def esewa_return(request, order_id):
                     payment = payment,
                     user=order.user,
                     product=item.product,
-                    quanity=item.quantity,
+                    quantity=item.quantity,
                     product_price = item.product.price,
                     ordered = True, 
                     
@@ -204,11 +204,11 @@ def esewa_return(request, order_id):
                 order_product.save(update_fields =["payment","ordered"])
                 
                 
-        items = order.orderproduct_set.select_related("product").prefetch_related("vairations")
+        items = order.orderproduct_set.select_related("product").prefetch_related("variations")
         amount_paid =_order_amount(order)
         
         mail_subject = 'Thank you for your order!'
-        message = render_to_string('orders/order_receied_email.html',{
+        message = render_to_string('orders/order_received_email.html',{
         'user':request.user,
         'order':order,
         'items':items,
@@ -225,7 +225,7 @@ def esewa_return(request, order_id):
             send_email.send()
             
         except Exception:
-            message.warning(request,"Order received, but we couldn't send the email. Contact admin.")
+            messages.warning(request,"Order received, but we couldn't send the email. Contact admin.")
             
         order.payment = payment 
         order.is_ordered = True 
@@ -286,7 +286,7 @@ def order_complete(request):
         'subtotal':subtotal,
         
     }
-    return render(request,'orders/order_complete_html',context)
+    return render(request,'orders/order_complete.html',context)
                            
 
 
