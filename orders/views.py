@@ -18,6 +18,9 @@ from django.db.models import F
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 
+def payments(request):
+    pass
+
 
 def place_order(request, total=0, quantity =0):
     
@@ -99,7 +102,7 @@ def _order_amount(order):
 
 def _make_signature(total_amount: int, transaction_uuid: str) -> str:
     
-    msg = f"total_amount={total_amount},transaction_uuid={transaction_uuid}, product_code={settings.ESEWA_PRODUCT_CODE}"
+    msg = f"total_amount={total_amount},transaction_uuid={transaction_uuid},product_code={settings.ESEWA_PRODUCT_CODE}"
     mac = hmac.new(
         settings.ESEWA_SECRET_KEY.encode("utf-8"),
         msg = msg.encode("utf-8"),
@@ -135,7 +138,7 @@ def esewa_start(request, order_id):
         "product_delivery_charge": 0,
         "success_url": _abs(request,"esewa_return", order_id=order.id),
         "failure_url": _abs(request,"esewa_return", order_id=order.id),
-        "signed_field_names": "total_amount,transaction_uuid, product_code",
+        "signed_field_names": "total_amount,transaction_uuid,product_code",
         "signature": _make_signature(total_amount, txn_uuid),
     }
     
