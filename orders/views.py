@@ -99,7 +99,7 @@ def _order_amount(order):
 
 def _make_signature(total_amount: int, transaction_uuid: str) -> str:
     
-    msg = f"total_amount={total_amount}, transaction_uuid={transaction_uuid}, product_code={settings.ESEWA_PRODUCT_CODE}"
+    msg = f"total_amount={total_amount},transaction_uuid={transaction_uuid}, product_code={settings.ESEWA_PRODUCT_CODE}"
     mac = hmac.new(
         settings.ESEWA_SECRET_KEY.encode("utf-8"),
         msg = msg.encode("utf-8"),
@@ -140,7 +140,7 @@ def esewa_start(request, order_id):
     }
     
     return render(request,"orders/esewa_redirect.html",{
-        "ESEWA_FROM_URL": settings.ESEWA_FORM_URL,
+        "ESEWA_FORM_URL": settings.ESEWA_FORM_URL,
         "form": form,
     })
     
