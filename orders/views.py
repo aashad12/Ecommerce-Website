@@ -68,7 +68,7 @@ def place_order(request, total=0, quantity =0):
             d = datetime.date(yr,mt,dt)
             current_date = d.strftime("%Y%m%d")
             order_number = current_date + str(data.id)
-            data.order_numer = order_number 
+            data.order_number = order_number 
             data.save()
             
             
@@ -99,7 +99,7 @@ def _order_amount(order):
 
 def _make_signature(total_amount: int, transaction_uuid: str) -> str:
     
-    msg = f"total_amount={total_amount}, transactiom_uuid={transaction_uuid}, product_code = {settings.ESEWA_PRODUCT_CODE}"
+    msg = f"total_amount={total_amount}, transaction_uuid={transaction_uuid}, product_code={settings.ESEWA_PRODUCT_CODE}"
     mac = hmac.new(
         settings.ESEWA_SECRET_KEY.encode("utf-8"),
         msg = msg.encode("utf-8"),
@@ -109,7 +109,10 @@ def _make_signature(total_amount: int, transaction_uuid: str) -> str:
 
 @login_required
 def esewa_start(request, order_id):
-    order = get_object_or_404(Order, id = order.id, user=request.user)
+    """
+    Minimal: build  signed from and auto-submit  to eSewa UAT. 
+    """
+    order = get_object_or_404(Order, id = order_id, user=request.user)
     total_amount = int(round(float(order.order_total or 0)))
     tax = int(round(float(order.tax or 0)))
     amount = total_amount - tax
@@ -136,7 +139,7 @@ def esewa_start(request, order_id):
         "signature": _make_signature(total_amount, txn_uuid),
     }
     
-    return render(request,"orders/payments/esewa_redirect.html",{
+    return render(request,"orders/esewa_redirect.html",{
         "ESEWA_FROM_URL": settings.ESEWA_FORM_URL,
         "form": form,
     })
@@ -145,11 +148,11 @@ def esewa_start(request, order_id):
 @login_required
 def esewa_return(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    encoded = request.GET.get("data") or request.POST.get("data")\
+    encoded = request.GET.get("data") or request.POST.get("data") \
         or request.GET.get("reponse")or request.POST.get("response")
         
         
-    payload, status. txn_code ={},"",""
+    payload, status, txn_code ={},"",""
     if encoded:
         try:
             payload = json.loads(base64.b64decode(encoded).decode("utf-8"))
