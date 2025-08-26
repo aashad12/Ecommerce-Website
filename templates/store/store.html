@@ -1,0 +1,223 @@
+{% extends 'master/base.html' %}
+{% load static %}
+{% block content %}
+<!-- ========================= SECTION PAGETOP ========================= -->
+<section class="section-pagetop bg">
+  <div class="container">
+    {% comment %} {%if 'search' in request.path %} {% endcomment %}
+    {%if keyword%}
+      <h2 class="title-page">{{ keyword }}</h2>
+      <p>{{ product_count }} items found for "{{ keyword }}"</p>
+    {%else%}
+    <h2 class="title-page">Our Store</h2>
+    {%endif%}
+  </div>
+  <!-- container //  -->
+</section>
+<!-- ========================= SECTION INTRO END// ========================= -->
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y">
+  <div class="container">
+    <div class="row">
+      <aside class="col-md-3">
+        <div class="card">
+          <article class="filter-group">
+            <header class="card-header">
+              <a
+                href="#"
+                data-toggle="collapse"
+                data-target="#collapse_1"
+                aria-expanded="true"
+                class="">
+                <i class="icon-control fa fa-chevron-down"></i>
+                <h6 class="title">Categories</h6>
+              </a>
+            </header>
+            <div class="filter-content collapse show" id="collapse_1" style="">
+              <div class="card-body">
+                <ul class="list-menu">
+                   <li>
+                    <a href="{% url 'store' %}">
+                      All Products
+                    </a>
+                  </li>
+                  {% for category in links %}
+                  <li>
+                    <a href="{{ category.get_url }}">
+                      {{category.category_name}} 
+                    </a>
+                  </li>
+                  {%endfor%}
+                  {% comment %} <li><a href="#">Watches </a></li>
+                  <li><a href="#">Cinema </a></li>
+                  <li><a href="#">Clothes </a></li>
+                  <li><a href="#">Home items </a></li>
+                  <li><a href="#">Animals</a></li>
+                  <li><a href="#">People </a></li> {% endcomment %}
+                </ul>
+              </div>
+              <!-- card-body.// -->
+            </div>
+          </article>
+          <!-- filter-group  .// -->
+          <article class="filter-group">
+            <header class="card-header">
+              <a
+                href="#"
+                data-toggle="collapse"
+                data-target="#collapse_4"
+                aria-expanded="true"
+                class=""
+              >
+                <i class="icon-control fa fa-chevron-down"></i>
+                <h6 class="title">Sizes</h6>
+              </a>
+            </header>
+            <div class="filter-content collapse show" id="collapse_4" style="">
+              <div class="card-body">
+                <label class="checkbox-btn">
+                  <input type="checkbox" />
+                  <span class="btn btn-light"> XS </span>
+                </label>
+
+                <label class="checkbox-btn">
+                  <input type="checkbox" />
+                  <span class="btn btn-light"> SM </span>
+                </label>
+
+                <label class="checkbox-btn">
+                  <input type="checkbox" />
+                  <span class="btn btn-light"> LG </span>
+                </label>
+
+                <label class="checkbox-btn">
+                  <input type="checkbox" />
+                  <span class="btn btn-light"> XXL </span>
+                </label>
+              </div>
+              <!-- card-body.// -->
+            </div>
+          </article>
+          <!-- filter-group .// -->
+
+          <article class="filter-group">
+            <header class="card-header">
+              <a
+                href="#"
+                data-toggle="collapse"
+                data-target="#collapse_3"
+                aria-expanded="true"
+                class=""
+              >
+                <i class="icon-control fa fa-chevron-down"></i>
+                <h6 class="title">Price range</h6>
+              </a>
+            </header>
+            <div class="filter-content collapse show" id="collapse_3" style="">
+              <div class="card-body">
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label>Min</label>
+                    <!-- <input class="form-control" placeholder="$0" type="number"> -->
+                    <select class="mr-2 form-control">
+                      <option value="0">$0</option>
+                      <option value="50">$50</option>
+                      <option value="100">$100</option>
+                      <option value="150">$150</option>
+                      <option value="200">$200</option>
+                      <option value="500">$500</option>
+                      <option value="1000">$1000</option>
+                    </select>
+                  </div>
+                  <div class="form-group text-right col-md-6">
+                    <label>Max</label>
+                    <select class="mr-2 form-control">
+                      <option value="50">$50</option>
+                      <option value="100">$100</option>
+                      <option value="150">$150</option>
+                      <option value="200">$200</option>
+                      <option value="500">$500</option>
+                      <option value="1000">$1000</option>
+                      <option value="2000">$2000+</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- form-row.// -->
+                <button class="btn btn-block btn-primary">Apply</button>
+              </div>
+              <!-- card-body.// -->
+            </div>
+          </article>
+          <!-- filter-group .// -->
+        </div>
+        <!-- card.// -->
+      </aside>
+      <!-- col.// -->
+      <main class="col-md-9">
+        {% if product_count > 0 %}
+         {%include 'store/includes/sort_dropdown.html'%}
+        {% endif %}
+        <!-- sect-heading -->
+
+        <div class="row">
+          {% if product_count > 0 %}
+            {%for product in products%}
+            <div class="col-md-4">
+              <figure class="card card-product-grid">
+                <div class="img-wrap">
+                  {%if product.images%}
+                  <a href="{{product.get_url}}">
+                    <img src="{{product.images.url}}" />
+                  </a>
+                  {%else%}
+                  <img src="{{site_setting.default_image.url}}" />
+                  {%endif%}
+                </div>
+                <!-- img-wrap.// -->
+                <figcaption class="info-wrap">
+                  <div class="fix-height">
+                    <a href="{{ product.get_url }}" class="title">
+                      {{product.product_name|truncatechars:57}}
+                    </a>
+                    <div class="price-wrap mt-2">
+                      <span class="price">Rs.{{product.price}}</span>
+                      <del class="price-old">Rs.{{product.price}}</del>
+                    </div>
+                    <!-- price-wrap.// -->
+                    {% if product.stock <= 0 %}
+                     <p class="text-warning small mb-1">Out of Stock</p>
+                    {% elif product.stock <= 5 %}
+                      <p class="text-warning small mb-1">Only {{ product.stock }} left in stock!</p>
+                    {% endif %}
+                  </div>
+                  {% comment %} <a href="{% url 'add_cart' product.id %}" class="btn btn-block btn-primary">Add to cart </a> {% endcomment %}
+                  <a href="{{product.get_url}}" class="btn btn-block btn-primary">View Details </a>
+                </figcaption>
+              </figure>
+            </div>
+            {%endfor%}
+          {% else %}
+            <div class="col-12">
+              <div class="card shadow-sm border-0">
+                <div class="card-body text-center py-5">
+                  <i class="fa fa-search fa-2x mb-3"></i>
+                  <h4>No results found</h4>
+                  <p class="text-muted">We couldn't find any matches{% if keyword %} for “{{ keyword }}”{% endif %}. Please try again.</p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          <!-- col.// -->
+        </div>
+        <!-- row end.// -->
+
+        {%include 'store/includes/pagination.html'%}
+      </main>
+      <!-- col.// -->
+    </div>
+  </div>
+  <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+{%endblock%}

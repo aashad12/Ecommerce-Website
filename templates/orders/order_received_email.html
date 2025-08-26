@@ -1,0 +1,13 @@
+{% autoescape off %}
+Hi {{user.first_name}},
+YOUR ORDERHAS BEEN RECEIVED
+Order Number: {{order.order_number}}
+
+Items:
+{%for item in items%}
+
+{{cart_item.product.product_name}} x{{cart_item.quantity}} -{{item.product_price}}
+{%endfor%}
+Total:{{amount_paid}}
+Thanks for shopping with us!
+{% endautoescape %}
