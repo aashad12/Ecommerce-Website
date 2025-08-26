@@ -169,3 +169,11 @@ MESSAGE_TAGS = {
 ESEWA_PRODUCT_CODE = "EPAYTEST"
 ESEWA_SECRET_KEY = "8gBm/:&EnhH.1/q"
 ESEWA_FORM_URL = "https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+Email_PORT = 587
+EMAIL_HOST_USER = 'aasradongol1234@gmail.com'
+EMAIL_HOST_PASSWORD = 'infe wujb hsfw wwch'
+EMAIL_USE_TLS = True

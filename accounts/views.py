@@ -120,9 +120,9 @@ def user_register(request):
             
             # User Activation
             current_site = get_current_site(request)
-            mail_subject = 'Please Activate your account'
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
+            mail_subject = 'Please Activate your account'
             message = render_to_string('accounts/verification/account_verification.html', {
                 'user': user,
                 'domain': current_site,
@@ -137,7 +137,7 @@ def user_register(request):
                     mail_subject, message, to=[to_email]
                 )
                 send_email.send()
-                messages.success(request, "Account created. Check your email to activate your account.")
+                # messages.success(request, "Account created. Check your email to activate your account.")
             except Exception:
                 messages.warning(request, "Account created, but we couldn't send the email. Ask admin to activate you.")
             

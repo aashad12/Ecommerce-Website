@@ -225,7 +225,7 @@ def esewa_return(request, order_id):
             send_email.send()
             
         except Exception:
-            messages.warning(request,"Order received, but we couldn't send the email. Contact admin.")
+            messages.warning(request,"Order received, but we couldn't send the email. ")
             
         order.payment = payment 
         order.is_ordered = True 
